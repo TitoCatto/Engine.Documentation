@@ -1,5 +1,6 @@
 import baseclient;
 import packet;
+import game;
 
 class Client : BaseClient
 {
