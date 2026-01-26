@@ -1,6 +1,5 @@
 public import std.socket;
 
-
 class BaseServer
 {
 

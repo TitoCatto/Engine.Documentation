@@ -50,54 +50,19 @@ extern(C) @nogc nothrow void key_callback(GLFWwindow* window, int key, int scanc
 	}
 }
 
-class MainApp : Panel
-{
-	this(Panel parent)
-	{
-		super(parent);
-		new Button(this,"Start and connect",&StartAndConnect);
-	}
-	
-	void StartAndConnect()
-	{
-		if(cl !is null)
-		{
-			cl.destroy();
-		}
-		
-		if(sv !is null)
-		{
-			sv.destroy();
-		}
-	
-		sv = new Server();
-		sv.Listen(3333);
-		cl = new Client();
-		cl.Connect("127.0.0.1",3333);
-	}
-	
-	override void PerformLayout()
-	{
-		LayoutVertically();
-		Stretch();
-	}
-}
-
 Server sv;
 Client cl;
-
-MainApp app;
 
 void main(string[] args)
 {
 	glfwSetErrorCallback(&errorCallback);
 	glfwInit();
 	
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
 	
 	glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, 1);
-	glfwWindowHint(GLFW_DECORATED, 0);
+	glfwWindowHint(GLFW_DECORATED, 1);
 	window = glfwCreateWindow(1280, 720, "App", null, null);
 	glfwSetMouseButtonCallback(window, &mouse_button_callback);
 	glfwSetCharCallback(window, &text_callback);
@@ -116,12 +81,6 @@ void main(string[] args)
 	{
 		writeln("couldnt find glBitmap in your system.");
 	}
-	mainpanel = new Window();
-	
-	app = new MainApp(mainpanel);
-	
-	mainpanel.inner.destroy();
-	mainpanel.inner = app;
 	
 	while (!glfwWindowShouldClose(window))
 	{
@@ -149,7 +108,6 @@ void main(string[] args)
 		glClear(GL_COLOR_BUFFER_BIT);
 		glBlendFuncSeparate(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA,GL_ONE,GL_ONE);
 		
-		DGUI_Draw(width,height);
 		
 		if(sv !is null)
 		{

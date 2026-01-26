@@ -38,7 +38,7 @@ class World
 	
 	void Serialize(ref void[] outbuffer)
 	{
-		
+	
 	}
 }
 
