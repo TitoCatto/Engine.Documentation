@@ -2,6 +2,7 @@ import entity;
 import script;
 import storage;
 import user;
+import userdata;
 
 enum WorldState
 {
