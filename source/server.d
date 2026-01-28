@@ -1,10 +1,14 @@
 import baseserver;
 import std.stdio;
 import game;
+import userinfo;
+import user;
 
 class Server : BaseServer
 {
 	Game game;
+	UserInfo[] connected_users;
+	User last_userid;
 	
 	this()
 	{
