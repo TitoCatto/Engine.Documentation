@@ -230,9 +230,9 @@ void Render_Loop()
 
 	}
 
-	glfwTerminate();
-	Render_run = false;
 	Kill_Everything_And_Quit();
+	Render_run = false;
+	glfwTerminate();
 }
 
 // called in main
