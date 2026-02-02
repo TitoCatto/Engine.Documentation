@@ -34,10 +34,13 @@ shared(bool) Server_run;
 
 void Server_Loop()
 {
+	Server sv = new Server();
+	sv.Listen(21370); // TODO : Unhardcode port
 	while(Server_run)
 	{
-		
+		sv.Tick(0.016);
 	}
+	sv.CloseSocket();
 	Server_run = false;
 }
 

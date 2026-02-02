@@ -18,10 +18,13 @@ shared(bool) Client_run;
 
 void Client_Loop()
 {
+	Client cl = new Client();
+	cl.Connect("127.0.0.1",21370); // TODO : Unhardcode port
 	while(Client_run)
 	{
-		
+		cl.Tick();
 	}
+	cl.CloseSocket();
 	Client_run = false;
 }
 

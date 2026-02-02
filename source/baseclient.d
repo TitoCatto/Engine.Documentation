@@ -27,6 +27,13 @@ class BaseClient
 		}
 	}
 	
+	void CloseSocket()
+	{
+		serversocket.shutdown(SocketShutdown.BOTH);
+		serversocket.close();
+		serversocket = null;
+	}
+	
 	void Send(PType)(PType pack)
 	{
 		serversocket.send([pack]);

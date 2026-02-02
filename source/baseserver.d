@@ -6,6 +6,10 @@ class BaseServer
 	UdpSocket listener;
 	void Listen(ushort port)
 	{
+		if(listener !is null)
+		{
+			CloseSocket();
+		}
 		listener = new UdpSocket();
 		listener.blocking = false;
 		listener.bind(new InternetAddress(port));
@@ -18,6 +22,11 @@ class BaseServer
 
 	void Tick(double delta)
 	{
+		if(listener is null)
+		{
+			return;
+		}
+		
 		try
 		{
 			Address from;
@@ -40,6 +49,13 @@ class BaseServer
 		{
 		
 		}
+	}
+	
+	void CloseSocket()
+	{
+		listener.shutdown(SocketShutdown.BOTH);
+		listener.close();
+		listener = null;
 	}
 	
 	void SendToAll(PacketT)(PacketT pack)

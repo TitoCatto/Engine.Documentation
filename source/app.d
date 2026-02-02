@@ -8,9 +8,6 @@ import client;
 import sex;
 import render;
 
-Server sv;
-Client cl;
-
 void Kill_Everything_And_Quit()
 {
 	Render_End();
