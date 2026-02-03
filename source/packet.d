@@ -1,7 +1,7 @@
 import user;
 import userdata;
 
-public enum PACKET_BYTES : uint {
+public enum PACKET_FLAGS : uint {
 	Error      = 0x80000000,
 	Processing = 0x40000000,
 	Registry   = 0x20000000,
@@ -17,7 +17,7 @@ struct Packet(uint ID)
 
 struct RegistryPacket(uint ID)
 { align(1):
-	uint type = PACKET_BYTES.Registry | ID;
+	uint type = PACKET_FLAGS.Registry | ID;
 	// TODO : ditto
 }
 
