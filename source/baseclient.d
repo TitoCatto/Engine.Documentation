@@ -1,4 +1,5 @@
 import std.socket;
+import std.stdio;
 
 class BaseClient
 {
@@ -22,6 +23,7 @@ class BaseClient
 		auto packetLength = serversocket.receive(packet[]);
 		while(packetLength != Socket.ERROR && packetLength > 0)
 		{
+			writeln(packetLength);
 			HandlePacket(packet[0..packetLength]);
 			packetLength = serversocket.receive(packet[]);
 		}

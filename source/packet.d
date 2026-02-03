@@ -11,14 +11,21 @@ public enum PACKET_FLAGS : uint {
 
 struct Packet(uint ID)
 { align(1):
+	static const uint Type = ID;
 	uint type = ID;
 	// TODO : we prolly want entries for CRC, incrementing packet id (for out-of-order fixups and responses)
 }
 
 struct RegistryPacket(uint ID)
 { align(1):
-	uint type = PACKET_FLAGS.Registry | ID;
+	static const uint Type = PACKET_FLAGS.Registry | ID;
+	uint type = ID;
 	// TODO : ditto
+}
+
+mixin template PackAsType(T, alias packet)
+{
+	T pack = *cast(T*)(packet.ptr);
 }
 
 //! server packets

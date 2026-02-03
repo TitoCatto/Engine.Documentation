@@ -5,6 +5,7 @@ import game;
 import userinfo;
 import user;
 import std.datetime;
+import packet;
 
 class Server : BaseServer
 {
@@ -17,32 +18,46 @@ class Server : BaseServer
 		game = new Game();
 	}
 	
-	override ubyte[] ProcessPacket(uint packettype, ubyte[] data, sockaddr fromi)
+	override void[] ProcessPacket(uint packettype, ubyte[] data, sockaddr fromi)
 	{	
 		writeln("Server:");
 		writeln(packettype);
-		ubyte[] retVal;
-
+		void[] retVal;
+		UserInfo* fromuser;
+		User userid;
+		if(fromi in connected_users)
+		{
+			fromuser = &connected_users[fromi];
+			userid = fromuser.id;
+		}
+		
 		switch(packettype)
 		{	
-			case 0:
+			case Packet0Handshake.p.Type:
 				writefln("Registering new user with id %d", last_userid);
 				const UserInfo newUser = {fromi, cast(User)last_userid++, Clock.currTime()};
 				connected_users[fromi] = newUser;
-				retVal = [0x00, 0x00, 0x00, 0x00];
+				fromuser = &connected_users[fromi];
+				retVal = [Packet2SetUserId(id:newUser.id)];
 				break;
 
-			case 1:
-				writefln("heartbeat from userid: ", connected_users[fromi].id);
+			case Packet1Heartbeat.p.Type:
+				writeln("Packet1Heartbeat from userid: ", userid);
 				retVal = [];
 				break;
-
+			
+			case Packet3Userdata.p.Type:
+				writeln("Packet3Userdata from userid: ", userid);
+				
+				retVal = [];
+				break;
+			
 			default:
 				writeln("admin pomocy siur szczypie");
 				retVal = [];
 				break;
 		}
-		connected_users[fromi].lastPacketTime = Clock.currTime();
+		fromuser.lastPacketTime = Clock.currTime();
 		return retVal;
 	}
 	
@@ -56,8 +71,6 @@ class Server : BaseServer
 				connected_users.remove(user.addr);
 			}
 		}
-		
-		// This comment has been purely added to cause merge conflicts
 
 		game.Tick(delta);
 		super.Tick(delta);

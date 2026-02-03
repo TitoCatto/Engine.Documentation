@@ -20,20 +20,21 @@ class Client : BaseClient
 
 	override void HandlePacket(ubyte[] packet)
 	{
+		const uint pType = *cast(const uint*)packet.ptr;
 		const ulong pLength = packet.length;
 		// first 4 bytes is type
-		const uint pType = packet.read!uint(); // read advances the pointer
 		writeln("Client:");
 		writefln("pType: 0x%X", pType);
 		writefln("pLength: 0x%d", pLength);
 		switch(pType)
 		{	
-			case 0:
-				writeln("Server connection established successfully");
+			case Packet2SetUserId.p.Type:
+				mixin PackAsType!(Packet2SetUserId,packet);
+				writeln("Server connection established successfully. Userid: ", pack.id);
 				break;
 
 			default:
-				writeln("Unknown packet type");
+				writeln("Unknown packet type: ", pType, " packet: ", packet);
 				break;
 		}
 	}

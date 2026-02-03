@@ -15,7 +15,7 @@ class BaseServer
 		listener.bind(new InternetAddress(port));
 	}
 	
-	ubyte[] ProcessPacket(uint packettype, ubyte[] data, sockaddr fromi)
+	void[] ProcessPacket(uint packettype, ubyte[] data, sockaddr fromi)
 	{
 		return [];
 	}
@@ -37,7 +37,7 @@ class BaseServer
 				sockaddr fromi = *from.name();
 				uint packettype = *cast(uint*)packet.ptr;
 				
-				ubyte[] tosend = ProcessPacket(packettype,(packet.ptr)[0..packetLength],fromi);
+				ubyte[] tosend = cast(ubyte[])ProcessPacket(packettype,(packet.ptr)[0..packetLength],fromi);
 				if(tosend.length > 0)
 				{
 					listener.sendTo(tosend,from);
