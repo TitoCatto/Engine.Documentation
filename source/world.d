@@ -1,0 +1,4 @@
+struct WorldInfo
+{
+	string name;
+}

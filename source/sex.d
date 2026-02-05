@@ -1,17 +1,41 @@
 // SErialized X data
+import std.bitmanip;
+import std.system;
 
-void SerializeSexString(ref void[] output, string v)
+void Serialize(T)(T v,ref void[] output)
+{
+	output ~= [v];
+}
+
+T Deserialize(T)(ref void[] input)
+{
+	return input.read!(T, Endian.littleEndian);
+}
+
+void Serialize(T : T[])(T[] v, ref void[] output)
 {
 	output ~= [cast(ulong)v.length];
 	output ~= cast(ubyte[])v;
 }
 
-void SerializeSexMap(ref void[] output, void[][string] data)
+T[] Deserialize(T : T[])(ref void[] input)
 {
-	output ~= [cast(ulong)data.length];
-	foreach(k,v; data)
+	ulong arraylength = Deserialize!ulong(input);
+	T[] ret = new T[](arraylength);
+	foreach(ref T v; ret)
 	{
-		SerializeSexString(output,k);
-		output ~= v;
+		v = input.read!(T, Endian.littleEndian);
 	}
+	return ret;
+}
+
+void Serialize(T : string)(string v,ref void[] output)
+{
+	output ~= [cast(ulong)v.length];
+	output ~= cast(ubyte[])v;
+}
+
+string Deserialize(T : string)(ref void[] input)
+{
+	return cast(string)Deserialize!ubyte(input);
 }

@@ -1,5 +1,7 @@
 import user;
 import userdata;
+import sex;
+import world;
 
 public enum PACKET_FLAGS : uint {
 	Error      = 0x80000000,
@@ -77,6 +79,7 @@ struct Packet3Userdata
 			UserdataRef id;
 			uint pos;
 			ushort length;
+			ubyte[] data;
 		};
 		ModifyArg modify;
 		
@@ -89,6 +92,41 @@ struct Packet3Userdata
 		
 		UserdataRef remove;
 	}
+	
+	void[] Serialize()
+	{
+		void[] ret;
+		p.Serialize(ret);
+		type.Serialize(ret);
+		switch(type)
+		{
+			case UserdataOp.Create:
+				create.name.Serialize(ret);
+				break;
+			case UserdataOp.Modify:
+				modify.id.Serialize(ret);
+				modify.pos.Serialize(ret);
+				modify.length.Serialize(ret);
+				modify.data.Serialize(ret);
+				break;
+			case UserdataOp.SetName:
+				setname.id.Serialize(ret);
+				setname.name.Serialize(ret);
+				break;
+			case UserdataOp.Remove:
+				remove.Serialize(ret);
+				break;
+			default: assert(0);
+		}
+		return ret;
+	}
+}
+
+struct Packet4CreateWorld
+{ align(1):
+	Packet!(4) p;
+	
+	WorldInfo info;
 }
 
 //! end server packets
